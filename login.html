@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Log In</h2>
+    <div id="message"></div>
+    <form id="loginForm">
+
+      <div class="input-group">
+        <input type="text" id="username" name="username" placeholder="Username">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>
+        </span>
+      </div>
+
+      <div class="input-group">
+        <input type="password" id="password" name="password" placeholder="Password">
+        <span class="icon">
+          <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        </span>
+      </div>
+
+      <div class="options-row">
+        <label><input type="checkbox" name="remember" style="width:auto;"> Remember me</label>
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <a href="register.html">Register</a></p>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+
+      var maxAttempts = 3;
+      var lockSeconds = 30;
+
+      function showLock() {
+        var left = Math.ceil((Number(localStorage.getItem("lockUntil")) - Date.now()) / 1000);
+        if (left <= 0) {
+          clearInterval(timer);
+          localStorage.removeItem("lockUntil");
+          localStorage.setItem("attempts", "0");
+          $("#loginForm input, #loginForm button").prop("disabled", false);
+          $("#message").hide();
+        } else {
+          $("#message").attr("class", "fail").text("Too many failed attempts. Try again in " + left + " seconds.").show();
+        }
+      }
+
+      var timer;
+      function lockForm() {
+        $("#loginForm input, #loginForm button").prop("disabled", true);
+        showLock();
+        timer = setInterval(showLock, 500);
+      }
+
+      // still locked after a page refresh
+      if (Number(localStorage.getItem("lockUntil")) > Date.now()) {
+        lockForm();
+      }
+
+      $("#loginForm").validate({
+        rules: {
+          username: {
+            required: true,
+            minlength: 3
+          },
+          password: {
+            required: true,
+            minlength: 5,
+            maxlength: 12
+          }
+        },
+        messages: {
+          username: {
+            required: "Please enter your username",
+            minlength: "Username must be at least 3 characters"
+          },
+          password: {
+            required: "Please enter your password",
+            minlength: "Password must be at least 5 characters",
+            maxlength: "Password must not exceed 12 characters"
+          }
+        },
+        errorPlacement: function (error, element) {
+          error.insertAfter(element.parent());
+        },
+        submitHandler: function (form) {
+          var username = $.trim($("#username").val()).toLowerCase();
+          var password = $("#password").val();
+
+          var users = JSON.parse(localStorage.getItem("users")) || [];
+          var found = false;
+          for (var i = 0; i < users.length; i++) {
+            if ((users[i].username === username || users[i].email === username) && users[i].password === password) {
+              found = true;
+            }
+          }
+
+          if (found || (username === "admin" && password === "12345")) {
+            localStorage.setItem("attempts", "0");
+            sessionStorage.setItem("loggedIn", "true");
+            window.location.href = "landing.html";
+            return;
+          }
+
+          var attempts = Number(localStorage.getItem("attempts")) + 1;
+          localStorage.setItem("attempts", String(attempts));
+
+          if (attempts >= maxAttempts) {
+            localStorage.setItem("lockUntil", String(Date.now() + lockSeconds * 1000));
+            lockForm();
+          } else {
+            var left = maxAttempts - attempts;
+            $("#message").attr("class", "fail").text("Incorrect username or password. " + left + " attempt(s) left.").show();
+            $("#password").val("");
+          }
+        }
+      });
+
+    });
+  </script>
+
+</body>
+</html>
