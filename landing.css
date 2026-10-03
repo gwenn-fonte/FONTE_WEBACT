@@ -42,7 +42,6 @@ button:focus-visible {
 }
 .skip-link:focus { top: 1rem; }
 
-/* HERO */
 .hero-section {
   background-image:
     linear-gradient(90deg, rgba(10,14,18,0.78) 0%, rgba(10,14,18,0.55) 40%, rgba(10,14,18,0.15) 70%, rgba(10,14,18,0.05) 100%),
@@ -120,7 +119,6 @@ button:focus-visible {
   border-radius: 6px;
 }
 
-/* ABOUT */
 .about-section {
   background-image: linear-gradient(rgba(241,232,208,0.92), rgba(241,232,208,0.92)), url('images/wand.jpg');
   background-size: cover;
@@ -141,7 +139,6 @@ button:focus-visible {
   border-radius: 6px;
 }
 
-/* CHARACTERS */
 .showcase-section {
   background-image: url('images/scar.jpg');
   background-size: cover;
@@ -201,7 +198,6 @@ button:focus-visible {
   margin: 0;
 }
 
-/* GALLERY */
 .gallery-section {
   background: var(--ink);
   color: var(--parchment);
@@ -233,7 +229,6 @@ button:focus-visible {
 .gallery-frame:hover img,
 .gallery-frame:focus-within img { transform: scale(1.04); }
 
-/* FOOTER */
 footer {
   background: var(--ink);
   color: var(--muted);
