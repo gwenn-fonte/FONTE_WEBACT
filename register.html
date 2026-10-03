@@ -57,8 +57,6 @@
 
   <script>
     $(document).ready(function () {
-
-      // real PH mobile number: 09XXXXXXXXX or +639XXXXXXXXX
       $.validator.addMethod("phPhone", function (value, element) {
         if (this.optional(element)) { return true; }
         if (!/^(09|\+639)\d{9}$/.test(value)) { return false; }
