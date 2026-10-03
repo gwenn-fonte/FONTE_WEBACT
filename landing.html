@@ -9,7 +9,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
   <link href="landing.css" rel="stylesheet">
   <script>
-    // Guard: only logged-in users can see this page
     if (sessionStorage.getItem('loggedIn') !== 'true') {
       window.location.replace('login.html');
     }
@@ -124,7 +123,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script>
-  // Logout: clear the session, then go to login
   document.getElementById('logoutLink').addEventListener('click', function () {
     sessionStorage.removeItem('loggedIn');
   });
